@@ -4,7 +4,7 @@
 
 NAME = megaphone
 .DEFAULT_GOAL := all
-.PHONY: all clean fclean re help test run_test
+.PHONY: all clean fclean re help
 .SILENT:
 
 #! ******************************************************************************#
@@ -36,9 +36,6 @@ RESET = \033[0m
 
 SRC_DIR := src/
 BUILD_DIR := build/
-TESTS_DIR := test
-TEST_BUILD_DIR := $(TESTS_DIR)/build
-TEST_BIN_DIR := $(TESTS_DIR)/bin
 
 #! ******************************************************************************#
 #                                   FILES                                        #
@@ -48,13 +45,6 @@ SRCS := $(wildcard $(SRC_DIR)*.cpp)
 OBJS = $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS = $(OBJS:.o=.d)
 
-TEST_SRCS := $(wildcard $(TESTS_DIR)/*.cpp)
-TEST_OBJS := $(patsubst $(TESTS_DIR)/%.cpp, $(TEST_BUILD_DIR)/%.o, $(TEST_SRCS))
-TEST_TARGET := $(TEST_BIN_DIR)/tests
-
-GTEST_DIR := /usr/lib/gtest/googletest
-GTEST_LIB := /usr/lib/gtest/lib/libgtest.a /usr/lib/gtest/lib/libgtest_main.a
-
 #! ******************************************************************************#
 #                                    COMMANDS                                    #
 #! ******************************************************************************#
@@ -63,14 +53,13 @@ MKDIR := mkdir -p
 RM := rm -rf
 SLEEP = sleep 0.1
 CC = c++
-SHELL := /bin/bash
 
 #! ******************************************************************************#
 #                                 FLAGS E COMP                                   #
 #! ******************************************************************************#
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98
-DFLAGS = -g3 -Wall -Wextra -Werror -Iinclude -isystem $(GTEST_DIR)/include
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
+DFLAGS = -g3 -Wall -Wextra -Werror -std=c++98
 COMP_OBJ = $(CC) $(CFLAGS) -c $< -o $@
 COMP_EXE = $(CC) $(OBJS) -o $(NAME)
 
@@ -84,15 +73,21 @@ endef
 
 define comp_objs
 	$(eval COUNT=$(shell expr $(COUNT) + 1))
+	@if [ $(COUNT) -eq 1 ]; then \
+		printf "$(YELLOW)Building megaphone files\n$(RESET)"; \
+	fi
 	$(COMP_OBJ)
 	$(SLEEP)
-	printf "Compiling Megaphone$(YELLOW) %d%%\r$(FCOLOR)" $$(echo $$(($(COUNT) * 100 / $(words $(SRCS)))))
+	printf "Compiling megaphone$(YELLOW) %d%%\r$(FCOLOR)" $$(echo $$(($(COUNT) * 100 / $(words $(SRCS)))))
+	@if [ $(COUNT) -eq $(words $(SRCS)) ]; then \
+		printf " Compiled $(DARK_GREEN)megaphone 100%%$(FCOLOR) ✅"; \
+	fi
 endef
 
 define comp_exe
 	$(COMP_EXE)
-	printf "\n"
-	printf "$(GREEN)Megaphone $(RESET)->$(PURPLE) Is Ready\n$(RESET)"
+	printf "\n \n"
+	printf "$(DARK_BLUE)megaphone $(RESET)$(PURPLE)is Ready\n$(RESET)"
 endef
 
 define help
@@ -102,7 +97,6 @@ define help
 	echo "${DARK_BLUE}re:${RESET} ${LIGHT_GRAY}Rebuild the program${RESET}"
 	echo "${DARK_BLUE}clean:${RESET} ${LIGHT_GRAY}Remove the object files${RESET}"
 	echo "${DARK_BLUE}fclean:${RESET} ${LIGHT_GRAY}Remove the program and the object files${RESET}"
-	echo "${DARK_BLUE}test:${RESET} ${LIGHT_GRAY}Compile tester length${RESET}"
 endef
 
 #! ******************************************************************************#
@@ -128,23 +122,5 @@ re: fclean all
 
 help:
 	$(call help)
-
-test: $(TEST_TARGET)
-
-$(TEST_TARGET): $(TEST_OBJS) | $(TEST_BIN_DIR)
-	$(CXX) $(DFLAGS) -pthread -o $@ $(TEST_OBJS) $(GTEST_LIB)
-
-$(TEST_BUILD_DIR)/%.o: $(TESTS_DIR)/%.cpp | $(TEST_BUILD_DIR)
-	$(CC) $(DFLAGS) -c -o $@ $<
-
-$(TEST_BUILD_DIR):
-	mkdir -p $(TEST_BUILD_DIR)
-
-$(TEST_BIN_DIR):
-	mkdir -p $(TEST_BIN_DIR)
-
-run_test: test
-	@./$(TEST_TARGET)
-	@rm -rf $(TEST_BIN_DIR) $(TEST_BUILD_DIR)
 
 -include $(DEPS)
