@@ -2,10 +2,10 @@
 #                                   NAME                                         #
 #! ******************************************************************************#
 
-NAME = 42_books
+NAME = ftBook
 .DEFAULT_GOAL := all
 .PHONY: all clean fclean re help
-.SILENT:
+# .SILENT:
 
 #! ******************************************************************************#
 #                                   COLORS                                       #
@@ -62,7 +62,7 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 DFLAGS = -g3 -Wall -Wextra -Werror -std=c++98
-COMP_OBJ = $(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
+COMP_OBJ = $(CC) $(CFLAGS) $(INCLUDES) -c $<
 COMP_EXE = $(CC) $(OBJS) -o $(NAME)
 
 #! ******************************************************************************#
@@ -76,26 +76,26 @@ endef
 define comp_objs
 	$(eval COUNT=$(shell expr $(COUNT) + 1))
 	@if [ $(COUNT) -eq 1 ]; then \
-		printf "$(YELLOW)Building 42_books files\n$(RESET)"; \
+		printf "$(YELLOW)Building ftBook files\n$(RESET)"; \
 	fi
 	$(COMP_OBJ)
 	$(SLEEP)
-	printf "Compiling 42_books$(YELLOW) %d%%\r$(FCOLOR)" $$(echo $$(($(COUNT) * 100 / $(words $(SRCS)))))
+	printf "Compiling ftBook$(YELLOW) %d%%\r$(FCOLOR)" $$(echo $$(($(COUNT) * 100 / $(words $(SRCS)))))
 	@if [ $(COUNT) -eq $(words $(SRCS)) ]; then \
-		printf " Compiled $(DARK_GREEN)42_books 100%%$(FCOLOR) ✅"; \
+		printf " Compiled $(DARK_GREEN)ftBook 100%%$(FCOLOR) ✅"; \
 	fi
 endef
 
 define comp_exe
 	$(COMP_EXE)
 	printf "\n \n"
-	printf "$(DARK_BLUE)42_books $(RESET)$(PURPLE)is Ready\n$(RESET)"
+	printf "$(DARK_BLUE)ftBook $(RESET)$(PURPLE)is Ready\n$(RESET)"
 endef
 
 define help
 	echo "${DARK_RED}Available targets:${RESET}"
 	printf "\n"
-	echo "${DARK_BLUE}all:${RESET} ${LIGHT_GRAY}Build a 42_books${RESET}"
+	echo "${DARK_BLUE}all:${RESET} ${LIGHT_GRAY}Build a ftBook${RESET}"
 	echo "${DARK_BLUE}re:${RESET} ${LIGHT_GRAY}Rebuild the program${RESET}"
 	echo "${DARK_BLUE}clean:${RESET} ${LIGHT_GRAY}Remove the object files${RESET}"
 	echo "${DARK_BLUE}fclean:${RESET} ${LIGHT_GRAY}Remove the program and the object files${RESET}"
