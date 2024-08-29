@@ -5,7 +5,7 @@
 NAME = ftBook
 .DEFAULT_GOAL := all
 .PHONY: all clean fclean re help
-# .SILENT:
+.SILENT:
 
 #! ******************************************************************************#
 #                                   COLORS                                       #
@@ -42,7 +42,11 @@ INCLUDES_DIR := includes/
 #                                   FILES                                        #
 #! ******************************************************************************#
 
-SRCS := $(wildcard $(SRC_DIR)*.cpp)
+# SRCS := $(wildcard $(SRC_DIR)*.cpp)
+SRCS =	$(addprefix $(SRCS_DIR),\
+		Contact.cpp \
+		Main.cpp \
+		PhoneBook.cpp)
 OBJS = $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS = $(OBJS:.o=.d)
 INCLUDES = $(wildcard $(INCLUDES_DIR)*.hpp)
@@ -62,7 +66,7 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 DFLAGS = -g3 -Wall -Wextra -Werror -std=c++98
-COMP_OBJ = $(CC) $(CFLAGS) $(INCLUDES) -c $<
+COMP_OBJ = $(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
 COMP_EXE = $(CC) $(OBJS) -o $(NAME)
 
 #! ******************************************************************************#

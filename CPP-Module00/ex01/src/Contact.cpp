@@ -6,7 +6,7 @@
 /*   By: cnatanae <cnatanae@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:06:23 by cnatanae          #+#    #+#             */
-/*   Updated: 2024/08/26 13:48:40 by cnatanae         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:28:07 by cnatanae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ std::string Contact::getNickname(void) {
 
 std::string Contact::getDarkestSecret(void) {
 	return this->_darkest_secret;
+}
+
+std::string Contact::getPhoneNumber(void) {
+	return this->_phone_number;
 }
 
 void Contact::setFirstName(std::string first_name) {

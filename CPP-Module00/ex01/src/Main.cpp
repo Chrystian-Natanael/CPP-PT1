@@ -6,7 +6,7 @@
 /*   By: cnatanae <cnatanae@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 09:47:16 by cnatanae          #+#    #+#             */
-/*   Updated: 2024/08/26 17:39:28 by cnatanae         ###   ########.fr       */
+/*   Updated: 2024/08/29 19:21:19 by cnatanae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,17 @@ void	welcome(void) {
 std::string promt(void) {
 	std::string option;
 
+	option.clear();
 	std::cout << "Choose a option below: " << std::endl;
 	std::cout << UNDL << G << BOLD << "ADD" << RST << std::setw(7) << std::setfill(' ') << "-" << " To add a new contact in your book" << std::endl;
 	std::cout << UNDL << RED << BOLD << "EXIT" << RST << std::setw(6) << std::setfill(' ') << "-" << " To close program" << std::endl;
 	std::cout << UNDL << Y << BOLD << "SEARCH" << RST << std::setw(4) << std::setfill(' ') << "-" << " To search a specified contact" << std::endl << std::endl;
 
-	std::getline(std::cin, option);
-	std::cin.clear();
-	std::clearerr(stdin);
+	while (1) {
+		std::getline(std::cin, option);
+		if (!option.empty())
+			break ;
+	}
 	return (option);
 }
 

@@ -6,7 +6,7 @@
 /*   By: cnatanae <cnatanae@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:18:53 by cnatanae          #+#    #+#             */
-/*   Updated: 2024/08/26 17:38:20 by cnatanae         ###   ########.fr       */
+/*   Updated: 2024/08/29 19:15:47 by cnatanae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 PhoneBook::PhoneBook(void) {
 	std::cout << "PhoneBook Constructor Called" << std::endl;
 	currIndex = 0;
+	numOfContacts = 0;
 }
 
 PhoneBook::~PhoneBook(void) {
@@ -25,7 +26,7 @@ bool	validName(const std::string &name) {
 	std::string::const_iterator it;
 	if (name.empty() || name.size() < 2)
 		return (false);
-	for (it = name.cbegin() ; it != name.cend() ; it++) {
+	for (it = name.begin() ; it != name.end() ; it++) {
 		if (!std::isalpha(*it) && *it != '-')
 			return (false);
 	}
@@ -44,11 +45,11 @@ bool	validPhone(std::string phone) {
 
 	if (phone.empty() || phone.size() < 2)
 		return (false);
-	if (*(phone.cbegin()) == '+') {
+	if (*(phone.begin()) == '+') {
 		limit_phone += 3;
 		phone.erase(0, 1);
 	}
-	for (it = phone.cbegin() ; it != phone.cend() ; it++) {
+	for (it = phone.begin() ; it != phone.end() ; it++) {
 		
 		if (*it == ' ' || *it == '-' || *it == '(' || *it == ')')
 			limit_phone++;
@@ -100,9 +101,13 @@ void	PhoneBook::addContact(void) {
 	newContact.setPhoneNumber(validInput("Phone Number", PHONE));
 	newContact.setDarkestSecret(validInput("Darkest Secret", ANY));
 	listContacts[currIndex++] = newContact;
+	if (numOfContacts < 8)
+		numOfContacts++;
 }
 
 void PhoneBook::searchContact() {
+	int	userInput = -1;
+
 	if (listContacts[0].getFirstName().empty()) {
 		std::cout << BRED << "Your forty two book is empty..." << RST << std::endl;
 		return ;
@@ -135,4 +140,16 @@ void PhoneBook::searchContact() {
 			std::cout << "---------------------------------------------" << std::endl;
 		}
 	}
+	do {
+		std::cout << "Insert the index of contact: ";
+		std::cin >> userInput;
+		if (std::cin.fail() || userInput <= 0 || userInput > numOfContacts)
+			std::cerr << std::endl << BRED << "Invalid Index, try again: " << RST << std::endl;
+	} while (userInput <= 0 || userInput > numOfContacts);
+	userInput--;
+	std::cout << std::endl << "First Name: " << listContacts[userInput].getFirstName() << std::endl;
+	std::cout << "Last Name: " << listContacts[userInput].getLastName() << std::endl;
+	std::cout << "Nickname: " << listContacts[userInput].getNickname() << std::endl;
+	std::cout << "Phone Number: " << listContacts[userInput].getPhoneNumber() << std::endl;
+	std::cout << "The Darkest Secret: " << listContacts[userInput].getDarkestSecret() << std::endl << std::endl;
 }

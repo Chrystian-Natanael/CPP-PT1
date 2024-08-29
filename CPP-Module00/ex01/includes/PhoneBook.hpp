@@ -17,6 +17,7 @@ class PhoneBook {
 private:
 	Contact	listContacts[8];
 	int		currIndex;
+	int		numOfContacts;
 
 public:
 	PhoneBook(void);
