@@ -1,132 +1,57 @@
-#! ******************************************************************************#
-#                                   NAME                                         #
-#! ******************************************************************************#
+# Compiler
+CXX := c++
 
-NAME = ftBook
-.DEFAULT_GOAL := all
-.PHONY: all clean fclean re help
-.SILENT:
+# Directories
+SRCDIR := src
+INCDIR := include
+BUILDDIR := build
+TARGETDIR := bin
 
-#! ******************************************************************************#
-#                                   COLORS                                       #
-#! ******************************************************************************#
+# Target executable name
+TARGET := ft_book
 
-DEFAULT=\033[39m
-BLACK=\033[30m
-DARK_RED=\033[31m
-DARK_GREEN=\033[32m
-DARK_YELLOW=\033[33m
-DARK_BLUE=\033[34m
-DARK_MAGENTA=\033[35m
-DARK_CYAN=\033[36m
-LIGHT_GRAY=\033[37m
-DARK_GRAY=\033[90m
-RED=\033[91m
-GREEN=\033[92m
-ORANGE=\033[93m
-BLUE=\033[94m
-MAGENTA=\033[95m
-CYAN=\033[96m
-WHITE=\033[97m
-RESET = \033[0m
+# Source files
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 
-#! ******************************************************************************#
-#                                   PATH                                         #
-#! ******************************************************************************#
+# Object files
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
-SRC_DIR := src/
-BUILD_DIR := build/
-INCLUDES_DIR := includes/
+# Includes
+INC := -I$(INCDIR)
 
-#! ******************************************************************************#
-#                                   FILES                                        #
-#! ******************************************************************************#
+# Flags
+CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-# SRCS := $(wildcard $(SRC_DIR)*.cpp)
-SRCS =	$(addprefix $(SRCS_DIR),\
-		Contact.cpp \
-		Main.cpp \
-		PhoneBook.cpp)
-OBJS = $(SRCS:%.cpp=$(BUILD_DIR)%.o)
-DEPS = $(OBJS:.o=.d)
-INCLUDES = $(wildcard $(INCLUDES_DIR)*.hpp)
+# Final executable
+EXECUTABLE := $(TARGETDIR)/$(TARGET)
 
-#! ******************************************************************************#
-#                                    COMMANDS                                    #
-#! ******************************************************************************#
+# Default make target
+all: directories $(EXECUTABLE)
 
-MKDIR := mkdir -p
-RM := rm -rf
-SLEEP = sleep 0.1
-CC = c++
+# Ensure build directories exist
+directories:
+	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(TARGETDIR)
 
-#! ******************************************************************************#
-#                                 FLAGS E COMP                                   #
-#! ******************************************************************************#
+# Rule for linking object files into executable
+$(EXECUTABLE): $(OBJECTS)
+	$(CXX) $(LDFLAGS) $^ -o $(EXECUTABLE)
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
-DFLAGS = -g3 -Wall -Wextra -Werror -std=c++98
-COMP_OBJ = $(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
-COMP_EXE = $(CC) $(OBJS) -o $(NAME)
+# Rule for compiling source files into object files
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	$(CXX) $(CXXFLAGS) $(INC) -c -o $@ $<
 
-#! ******************************************************************************#
-#                                  FUNCTIONS                                     #
-#! ******************************************************************************#
-
-define create_dir
-	$(MKDIR) $(dir $@)
-endef
-
-define comp_objs
-	$(eval COUNT=$(shell expr $(COUNT) + 1))
-	@if [ $(COUNT) -eq 1 ]; then \
-		printf "$(YELLOW)Building ftBook files\n$(RESET)"; \
-	fi
-	$(COMP_OBJ)
-	$(SLEEP)
-	printf "Compiling ftBook$(YELLOW) %d%%\r$(FCOLOR)" $$(echo $$(($(COUNT) * 100 / $(words $(SRCS)))))
-	@if [ $(COUNT) -eq $(words $(SRCS)) ]; then \
-		printf " Compiled $(DARK_GREEN)ftBook 100%%$(FCOLOR) ✅"; \
-	fi
-endef
-
-define comp_exe
-	$(COMP_EXE)
-	printf "\n \n"
-	printf "$(DARK_BLUE)ftBook $(RESET)$(PURPLE)is Ready\n$(RESET)"
-endef
-
-define help
-	echo "${DARK_RED}Available targets:${RESET}"
-	printf "\n"
-	echo "${DARK_BLUE}all:${RESET} ${LIGHT_GRAY}Build a ftBook${RESET}"
-	echo "${DARK_BLUE}re:${RESET} ${LIGHT_GRAY}Rebuild the program${RESET}"
-	echo "${DARK_BLUE}clean:${RESET} ${LIGHT_GRAY}Remove the object files${RESET}"
-	echo "${DARK_BLUE}fclean:${RESET} ${LIGHT_GRAY}Remove the program and the object files${RESET}"
-endef
-
-#! ******************************************************************************#
-#                                   TARGETS                                      #
-#! ******************************************************************************#
-
-all: $(NAME)
-
-$(BUILD_DIR)%.o: %.cpp
-	$(call create_dir)
-	$(call comp_objs)
-
-$(NAME): $(OBJS)
-	$(call comp_exe)
-
+# Clean build artifacts
 clean:
-	$(RM) $(BUILD_DIR)
+	@rm -rf $(BUILDDIR)
 
 fclean: clean
-	$(RM) $(NAME)
+	@rm -rf $(TARGETDIR)
 
-re: fclean all
+# Run the executable
+run:
+	@./$(EXECUTABLE)
 
-help:
-	$(call help)
-
--include $(DEPS)
+# Phony targets
+.PHONY: all clean fclean run

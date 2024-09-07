@@ -1,14 +1,13 @@
-# Compiler
 CXX := c++
 
 # Directories
 SRCDIR := src
-INCDIR := include
+INCDIR := includes
 BUILDDIR := build
 TARGETDIR := bin
 
 # Target executable name
-TARGET := megaphone
+TARGET := TheJobOfYourDreams
 
 # Source files
 SRCEXT := cpp
@@ -26,10 +25,8 @@ CXXFLAGS = -std=c++98 -Wall -Wextra -Werror
 # Final executable
 EXECUTABLE := $(TARGETDIR)/$(TARGET)
 
-# Default make target
 all: directories $(EXECUTABLE)
 
-# Ensure build directories exist
 directories:
 	@mkdir -p $(BUILDDIR)
 	@mkdir -p $(TARGETDIR)
