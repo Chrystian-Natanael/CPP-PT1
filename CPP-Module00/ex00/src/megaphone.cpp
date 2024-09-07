@@ -6,7 +6,7 @@
 /*   By: cnatanae <cnatanae@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 16:08:11 by cnatanae          #+#    #+#             */
-/*   Updated: 2024/08/10 17:52:02 by cnatanae         ###   ########.fr       */
+/*   Updated: 2024/09/07 12:01:37 by cnatanae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,4 @@ int	main(int argc, char **argv)
 {
 	std::cout << processArgs(argc, argv) << std::endl;
 	return EXIT_SUCCESS;
-
 }

@@ -6,11 +6,12 @@
 /*   By: cnatanae <cnatanae@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:18:53 by cnatanae          #+#    #+#             */
-/*   Updated: 2024/08/29 19:15:47 by cnatanae         ###   ########.fr       */
+/*   Updated: 2024/09/07 13:02:10 by cnatanae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/PhoneBook.hpp"
+#include <limits>
 
 PhoneBook::PhoneBook(void) {
 	std::cout << "PhoneBook Constructor Called" << std::endl;
@@ -50,7 +51,6 @@ bool	validPhone(std::string phone) {
 		phone.erase(0, 1);
 	}
 	for (it = phone.begin() ; it != phone.end() ; it++) {
-		
 		if (*it == ' ' || *it == '-' || *it == '(' || *it == ')')
 			limit_phone++;
 		else if (!std::isdigit(*it))
@@ -80,7 +80,6 @@ std::string	validInput(std::string type, info validation) {
 				isValidValue = validAny(value);
 				break;
 			default:
-				
 				break;
 		}
 		if (isValidValue == false)
@@ -145,6 +144,8 @@ void PhoneBook::searchContact() {
 		std::cin >> userInput;
 		if (std::cin.fail() || userInput <= 0 || userInput > numOfContacts)
 			std::cerr << std::endl << BRED << "Invalid Index, try again: " << RST << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	} while (userInput <= 0 || userInput > numOfContacts);
 	userInput--;
 	std::cout << std::endl << "First Name: " << listContacts[userInput].getFirstName() << std::endl;
