@@ -84,8 +84,8 @@ Fixed &Fixed::operator++(void) {
 }
 
 Fixed Fixed::operator++(int) {
-	Fixed tmp(this->_fixedValue * toFloat());
-	this->_fixedValue += 1;
+	Fixed tmp(*this);
+	++(*this);
 	return (tmp);
 }
 
@@ -95,8 +95,8 @@ Fixed &Fixed::operator--(void) {
 }
 
 Fixed Fixed::operator--(int) {
-	Fixed tmp(this->_fixedValue * toFloat());
-	this->_fixedValue -= 1;
+	Fixed tmp(*this);
+	--(*this);
 	return (tmp);
 }
 
